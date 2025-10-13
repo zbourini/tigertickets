@@ -37,11 +37,11 @@ function EventItem({ event, onPurchase, isPurchasing }) {
       <div className="event-info">
         <h2 className="event-name">{name}</h2>
         <p className="event-date">
-          <span className="label">Date:</span> 
+          <span className="label">Date: </span> 
           <time dateTime={date}>{new Date(date).toLocaleDateString()}</time>
         </p>
         <p className="event-tickets">
-          <span className="label">Tickets Available:</span> 
+          <span className="label">Tickets Available: </span> 
           <span 
             className={`ticket-count ${isSoldOut ? 'sold-out' : ''}`}
             aria-label={`${tickets_available} tickets remaining for ${name}`}

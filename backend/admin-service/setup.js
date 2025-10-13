@@ -12,8 +12,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Database file path in the shared directory
-const DB_PATH = path.join(__dirname, '..', 'backend', 'shared-db', 'database.sqlite');
-const INIT_SQL_PATH = path.join(__dirname, '..', 'backend', 'shared-db', 'init.sql');
+const DB_PATH = path.join(__dirname, '..', 'shared-db', 'database.sqlite');
+const INIT_SQL_PATH = path.join(__dirname, '..', 'shared-db', 'init.sql');
 
 /**
  * Initialize the SQLite database

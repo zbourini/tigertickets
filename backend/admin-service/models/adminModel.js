@@ -10,7 +10,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Database path pointing to shared database
-const DB_PATH = path.join(__dirname, '..', '..', 'backend', 'shared-db', 'database.sqlite');
+const DB_PATH = path.join(__dirname, '..', '..', 'shared-db', 'database.sqlite');
 
 /**
  * Get a database connection

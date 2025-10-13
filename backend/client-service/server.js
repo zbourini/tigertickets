@@ -4,10 +4,6 @@
  * This is the main server file for the Tiger Tickets client service.
  * It handles client-facing operations including fetching event listings
  * and processing ticket purchases from the shared SQLite database.
- * 
- * The server runs on port 6001 and provides APIs for:
- * - GET /api/events: Retrieve all available events
- * - POST /api/events/:id/purchase: Purchase tickets for an event
  */
 
 const express = require('express');
@@ -21,7 +17,7 @@ const clientRoutes = require('./routes/clientRoutes');
 
 // Middleware configuration
 app.use(cors({
-    origin: "http://localhost:5001", // Allow frontend connections
+    origin: ["http://localhost:3000", "http://localhost:5001"], // Allow frontend and admin service connections
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -45,7 +41,7 @@ app.use((err, req, res, next) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
     res.status(404).json({ 
         error: 'Not found',
         message: `Route ${req.originalUrl} not found` 
