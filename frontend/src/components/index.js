@@ -11,3 +11,4 @@ export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as EventItem } from './EventItem';
 export { default as EventsList } from './EventsList';
 export { default as RefreshButton } from './RefreshButton';
+export { default as ChatSidebar } from './ChatSidebar';

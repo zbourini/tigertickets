@@ -5,7 +5,8 @@ import {
   StatusMessage, 
   LoadingSpinner, 
   EventsList, 
-  RefreshButton 
+  RefreshButton,
+  ChatSidebar
 } from './components';
 
 /**
@@ -93,6 +94,20 @@ function App() {
     }
   };
 
+  /**
+   * Handle purchase from chat sidebar
+   * Updates the events list when a purchase is made through chat
+   */
+  const handleChatPurchase = (eventId, updatedEvent) => {
+    setEvents(prevEvents => 
+      prevEvents.map(event => 
+        event.id === eventId 
+          ? { ...event, tickets_available: updatedEvent.tickets_available }
+          : event
+      )
+    );
+  };
+
   return (
     <div className="App">
       <Header />
@@ -115,6 +130,9 @@ function App() {
           isLoading={loading} 
         />
       </main>
+
+      {/* Chat Sidebar for AI-powered ticket booking */}
+      <ChatSidebar onPurchase={handleChatPurchase} />
     </div>
   );
 }
