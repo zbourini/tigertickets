@@ -108,12 +108,21 @@
   align-items: flex-start;
 }
 
+/* Message Content Wrapper with Speaker Button */
+.message-content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  width: 100%;
+}
+
 /* Message Content Bubble */
 .message-content {
   padding: 12px 16px;
   border-radius: 16px;
   word-wrap: break-word;
   line-height: 1.5;
+  flex: 1;
 }
 
 .chat-message.user .message-content {
@@ -127,6 +136,41 @@
   color: #333;
   border: 1px solid #e0e0e0;
   border-bottom-left-radius: 4px;
+}
+
+/* Speaker Button */
+.speaker-button {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.speaker-button:hover {
+  background: rgba(245, 101, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.speaker-button.speaking {
+  animation: pulse 1s infinite;
+  background: rgba(245, 101, 0, 0.2);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
 }
 
 /* Message Timestamp */
@@ -243,6 +287,40 @@
   padding: 20px;
   background: white;
   border-top: 1px solid #e0e0e0;
+  align-items: center;
+}
+
+/* Microphone Button */
+.microphone-button {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #522d80, #6b3fa0);
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.microphone-button:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(82, 45, 128, 0.4);
+}
+
+.microphone-button.listening {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  animation: pulse 1.5s infinite;
+}
+
+.microphone-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .chat-input {
@@ -277,6 +355,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .send-button:hover:not(:disabled) {

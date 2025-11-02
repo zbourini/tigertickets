@@ -10,7 +10,11 @@ function ChatSidebar({ onPurchase }) {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [speakingMessageId, setSpeakingMessageId] = useState(null);
+  const [speechSupported, setSpeechSupported] = useState(false);
   const messagesEndRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
@@ -25,12 +29,119 @@ function ChatSidebar({ onPurchase }) {
   useEffect(() => {
     if (messages.length === 0) {
       setMessages([{
+        id: Date.now(),
         type: 'assistant',
         content: 'Hi! I\'m TigerTickets AI. Ask me about events or tell me what you\'d like to book!',
         timestamp: new Date()
       }]);
     }
   }, []);
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      console.log('Speech Recognition is supported!');
+      setSpeechSupported(true);
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInputValue(transcript);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    } else {
+      console.warn('Speech recognition not supported in this browser');
+      setSpeechSupported(false);
+    }
+
+    // Cleanup speech synthesis on unmount
+    return () => {
+      if (window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  /**
+   * Start voice recognition
+   */
+  const startListening = () => {
+    if (recognitionRef.current && !isListening) {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (error) {
+        console.error('Error starting recognition:', error);
+      }
+    }
+  };
+
+  /**
+   * Stop voice recognition
+   */
+  const stopListening = () => {
+    if (recognitionRef.current && isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  };
+
+  /**
+   * Toggle voice recognition
+   */
+  const toggleVoiceInput = () => {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  };
+
+  /**
+   * Speak a message using Speech Synthesis
+   */
+  const speakMessage = (messageId, text) => {
+    // Cancel any ongoing speech
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      if (speakingMessageId === messageId) {
+        setSpeakingMessageId(null);
+        return;
+      }
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    utterance.onstart = () => {
+      setSpeakingMessageId(messageId);
+    };
+
+    utterance.onend = () => {
+      setSpeakingMessageId(null);
+    };
+
+    utterance.onerror = () => {
+      setSpeakingMessageId(null);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
 
   /**
    * Send message to LLM service and process response
@@ -44,6 +155,7 @@ function ChatSidebar({ onPurchase }) {
 
     // Add user message to chat
     const newUserMessage = {
+      id: Date.now(),
       type: 'user',
       content: userMessage,
       timestamp: new Date()
@@ -85,6 +197,7 @@ function ChatSidebar({ onPurchase }) {
     // Check if there are foundEvents from the search
     if (llmData.foundEvents && llmData.foundEvents.length > 0) {
       const assistantMessage = {
+        id: Date.now(),
         type: 'assistant',
         content: llmData.text || 'I found these events for you:',
         events: llmData.foundEvents,
@@ -107,6 +220,7 @@ function ChatSidebar({ onPurchase }) {
    */
   const addAssistantMessage = (content) => {
     const assistantMessage = {
+      id: Date.now(),
       type: 'assistant',
       content: content,
       timestamp: new Date()
@@ -178,10 +292,24 @@ function ChatSidebar({ onPurchase }) {
         </div>
 
         <div className="chat-messages">
-          {messages.map((msg, index) => (
-            <div key={index} className={`chat-message ${msg.type}`}>
-              <div className="message-content">
-                {msg.content}
+          {messages.map((msg) => (
+            <div key={msg.id} className={`chat-message ${msg.type}`}>
+              <div className="message-content-wrapper">
+                <div className="message-content">
+                  {msg.content}
+                </div>
+                
+                {/* Speaker button for assistant messages */}
+                {msg.type === 'assistant' && (
+                  <button
+                    className={`speaker-button ${speakingMessageId === msg.id ? 'speaking' : ''}`}
+                    onClick={() => speakMessage(msg.id, msg.content)}
+                    aria-label={speakingMessageId === msg.id ? 'Stop speaking' : 'Read aloud'}
+                    title={speakingMessageId === msg.id ? 'Stop speaking' : 'Read aloud'}
+                  >
+                    {speakingMessageId === msg.id ? '🔊' : '🔈'}
+                  </button>
+                )}
               </div>
               
               {/* Display event results with purchase buttons */}
@@ -230,10 +358,25 @@ function ChatSidebar({ onPurchase }) {
         </div>
 
         <div className="chat-input-container">
+          <button
+            className={`microphone-button ${isListening ? 'listening' : ''}`}
+            onClick={toggleVoiceInput}
+            disabled={isLoading || !speechSupported}
+            aria-label={isListening ? 'Stop listening' : 'Start voice input'}
+            title={
+              !speechSupported 
+                ? 'Voice input not supported in this browser' 
+                : isListening 
+                  ? 'Stop listening' 
+                  : 'Voice input'
+            }
+          >
+            {isListening ? '🎤' : '🎙️'}
+          </button>
           <input
             type="text"
             className="chat-input"
-            placeholder="Ask about events..."
+            placeholder={isListening ? 'Listening...' : 'Ask about events...'}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
