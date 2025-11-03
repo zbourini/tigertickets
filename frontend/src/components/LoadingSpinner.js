@@ -14,7 +14,7 @@ import React from 'react';
  */
 function LoadingSpinner() {
   return (
-    <div className="loading" aria-live="polite">
+    <div className="loading" role="status" aria-live="polite">
       Loading events...
     </div>
   );

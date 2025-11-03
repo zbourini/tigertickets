@@ -79,15 +79,15 @@ function App() {
               : event
           )
         );
-        setMessage(`✅ Successfully purchased ticket for ${eventName}!`);
+        setMessage(`Successfully purchased ticket for ${eventName}!`);
         
         // Clear success message after 3 seconds
         setTimeout(() => setMessage(''), 3000);
       } else {
-        setMessage(`❌ ${data.message || 'Failed to purchase ticket'}`);
+        setMessage(`Error: ${data.message || 'Failed to purchase ticket'}`);
       }
     } catch (error) {
-      setMessage('❌ Failed to connect to the server');
+      setMessage('Error: Failed to connect to the server');
       console.error('Error purchasing ticket:', error);
     } finally {
       setPurchasing(null);

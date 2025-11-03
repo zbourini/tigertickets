@@ -24,7 +24,7 @@ function RefreshButton({ onRefresh, isLoading }) {
         disabled={isLoading}
         aria-label="Refresh events list"
       >
-        {isLoading ? 'Refreshing...' : '🔄 Refresh Events'}
+        {isLoading ? 'Refreshing...' : 'Refresh Events'}
       </button>
     </div>
   );

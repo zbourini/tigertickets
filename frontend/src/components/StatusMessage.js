@@ -17,7 +17,7 @@ import React from 'react';
 function StatusMessage({ message }) {
   if (!message) return null;
 
-  const isSuccess = message.includes('✅');
+  const isSuccess = message.includes('Successfully');
   
   return (
     <div 

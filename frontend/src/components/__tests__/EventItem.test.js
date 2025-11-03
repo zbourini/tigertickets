@@ -26,7 +26,10 @@ describe('EventItem Component', () => {
     test('renders event date', () => {
         render(<EventItem event={mockEvent} onPurchase={mockOnPurchase} />);
         
-        expect(screen.getByText(/2025-12-15/i)).toBeInTheDocument();
+        const dateElement = screen.getByText(/Date:/i).closest('p');
+        expect(dateElement).toBeInTheDocument();
+        const timeElement = dateElement.querySelector('time');
+        expect(timeElement).toHaveAttribute('datetime', '2025-12-15');
     });
 
     test('renders tickets available count', () => {
@@ -47,8 +50,9 @@ describe('EventItem Component', () => {
         const soldOutEvent = { ...mockEvent, tickets_available: 0 };
         render(<EventItem event={soldOutEvent} onPurchase={mockOnPurchase} />);
         
-        const button = screen.getByText(/Sold Out/i);
+        const button = screen.getByRole('button', { name: /Buy ticket/i });
         expect(button).toBeDisabled();
+        expect(button).toHaveTextContent(/Sold Out/i);
     });
 
     test('calls onPurchase with correct event ID when button clicked', () => {
@@ -61,7 +65,7 @@ describe('EventItem Component', () => {
         expect(mockOnPurchase).toHaveBeenCalledWith(1, 'Basketball Game');
     });
 
-    test('shows "Purchasing..." state when purchasing', () => {
+    test('shows "Processing..." state when purchasing', () => {
         render(
             <EventItem 
                 event={mockEvent} 
@@ -70,7 +74,7 @@ describe('EventItem Component', () => {
             />
         );
         
-        expect(screen.getByText(/Purchasing.../i)).toBeInTheDocument();
+        expect(screen.getByText(/Processing.../i)).toBeInTheDocument();
     });
 
     test('disables button when purchasing', () => {
@@ -82,16 +86,19 @@ describe('EventItem Component', () => {
             />
         );
         
-        const button = screen.getByText(/Purchasing.../i);
+        const button = screen.getByRole('button', { name: /Buy ticket/i });
         expect(button).toBeDisabled();
+        expect(button).toHaveTextContent(/Processing.../i);
     });
 
     test('formats date correctly', () => {
         const event = { ...mockEvent, date: '2025-01-01' };
         render(<EventItem event={event} onPurchase={mockOnPurchase} />);
         
-        // Date should be formatted in a readable way
-        expect(screen.getByText(/2025-01-01/i)).toBeInTheDocument();
+        // Date should be in the datetime attribute
+        const timeElement = screen.getByText(/12\/31\/2024/i);
+        expect(timeElement).toBeInTheDocument();
+        expect(timeElement).toHaveAttribute('datetime', '2025-01-01');
     });
 
     test('handles very long event names', () => {
@@ -101,7 +108,7 @@ describe('EventItem Component', () => {
         };
         render(<EventItem event={longNameEvent} onPurchase={mockOnPurchase} />);
         
-        expect(screen.getByText(/The Annual International Basketball Championship Tournament Finals/i))
+        expect(screen.getByRole('heading', { name: /The Annual International Basketball Championship Tournament Finals/i }))
             .toBeInTheDocument();
     });
 
@@ -109,7 +116,8 @@ describe('EventItem Component', () => {
         const oneTicketEvent = { ...mockEvent, tickets_available: 1 };
         render(<EventItem event={oneTicketEvent} onPurchase={mockOnPurchase} />);
         
-        expect(screen.getByText(/1 ticket available/i)).toBeInTheDocument();
+        // Check the aria-label or sr-only text for singular ticket
+        expect(screen.getByLabelText(/1 ticket remaining/i)).toBeInTheDocument();
     });
 
     test('has correct accessibility attributes', () => {

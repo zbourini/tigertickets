@@ -18,7 +18,9 @@ function ChatSidebar({ onPurchase }) {
 
   // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current && typeof messagesEndRef.current.scrollIntoView === 'function') {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
@@ -246,18 +248,18 @@ function ChatSidebar({ onPurchase }) {
       const data = await response.json();
 
       if (data.success) {
-        addAssistantMessage(`✅ Successfully purchased ${ticketCount} ticket(s) for ${eventName}!`);
+        addAssistantMessage(`Successfully purchased ${ticketCount} ticket(s) for ${eventName}!`);
         
         // Notify parent component to refresh events
         if (onPurchase) {
           onPurchase(eventId, data.event);
         }
       } else {
-        addAssistantMessage(`❌ ${data.message || 'Failed to purchase ticket'}`);
+        addAssistantMessage(`Error: ${data.message || 'Failed to purchase ticket'}`);
       }
     } catch (error) {
       console.error('Error purchasing ticket:', error);
-      addAssistantMessage('❌ Failed to connect to the server');
+      addAssistantMessage('Error: Failed to connect to the server');
     } finally {
       setIsLoading(false);
     }
@@ -281,13 +283,13 @@ function ChatSidebar({ onPurchase }) {
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
-        {isOpen ? '✕' : '💬'}
+        {isOpen ? 'X' : 'Chat'}
       </button>
 
       {/* Chat Sidebar */}
       <div className={`chat-sidebar ${isOpen ? 'open' : ''}`}>
         <div className="chat-header">
-          <h3>🐅 TigerTickets AI</h3>
+          <h3>TigerTickets AI</h3>
           <p>Ask me about events!</p>
         </div>
 
@@ -307,7 +309,7 @@ function ChatSidebar({ onPurchase }) {
                     aria-label={speakingMessageId === msg.id ? 'Stop speaking' : 'Read aloud'}
                     title={speakingMessageId === msg.id ? 'Stop speaking' : 'Read aloud'}
                   >
-                    {speakingMessageId === msg.id ? '🔊' : '🔈'}
+                    {speakingMessageId === msg.id ? 'Stop' : 'Read'}
                   </button>
                 )}
               </div>
@@ -321,9 +323,9 @@ function ChatSidebar({ onPurchase }) {
                         <strong>{event.name}</strong>
                       </div>
                       <div className="event-card-body">
-                        <p className="event-date">📅 {new Date(event.date).toLocaleDateString()}</p>
+                        <p className="event-date">Date: {new Date(event.date).toLocaleDateString()}</p>
                         <p className="event-tickets">
-                          🎟️ {event.tickets_available} tickets available
+                          {event.tickets_available} tickets available
                         </p>
                       </div>
                       <button
@@ -371,7 +373,7 @@ function ChatSidebar({ onPurchase }) {
                   : 'Voice input'
             }
           >
-            {isListening ? '🎤' : '🎙️'}
+            {isListening ? 'Listening...' : 'Mic'}
           </button>
           <input
             type="text"
@@ -388,7 +390,7 @@ function ChatSidebar({ onPurchase }) {
             disabled={!inputValue.trim() || isLoading}
             aria-label="Send message"
           >
-            ➤
+            Send
           </button>
         </div>
       </div>

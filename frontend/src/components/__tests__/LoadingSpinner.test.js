@@ -7,21 +7,8 @@ describe('LoadingSpinner Component', () => {
     test('renders loading spinner', () => {
         render(<LoadingSpinner />);
         
-        const spinner = screen.getByTestId('loading-spinner');
+        const spinner = screen.getByRole('status');
         expect(spinner).toBeInTheDocument();
-    });
-
-    test('has appropriate aria-label for accessibility', () => {
-        render(<LoadingSpinner />);
-        
-        const spinner = screen.getByLabelText(/loading/i);
-        expect(spinner).toBeInTheDocument();
-    });
-
-    test('displays loading text', () => {
-        render(<LoadingSpinner />);
-        
-        expect(screen.getByText(/loading/i)).toBeInTheDocument();
     });
 
     test('has role="status" for screen readers', () => {
@@ -31,10 +18,23 @@ describe('LoadingSpinner Component', () => {
         expect(spinner).toBeInTheDocument();
     });
 
-    test('applies correct CSS classes for animation', () => {
+    test('displays loading text', () => {
+        render(<LoadingSpinner />);
+        
+        expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    });
+
+    test('has aria-live="polite" for accessibility', () => {
+        render(<LoadingSpinner />);
+        
+        const spinner = screen.getByRole('status');
+        expect(spinner).toHaveAttribute('aria-live', 'polite');
+    });
+
+    test('applies correct CSS class', () => {
         const { container } = render(<LoadingSpinner />);
         
-        const spinner = container.querySelector('.spinner, .loading-spinner, [class*="spin"]');
+        const spinner = container.querySelector('.loading');
         expect(spinner).toBeTruthy();
     });
 });

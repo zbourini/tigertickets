@@ -23,6 +23,7 @@ import React from 'react';
 function EventItem({ event, onPurchase, isPurchasing }) {
   const { id, name, date, tickets_available } = event;
   const isSoldOut = tickets_available === 0;
+  const ticketText = tickets_available === 1 ? 'ticket' : 'tickets';
 
   /**
    * Handle purchase button click
@@ -44,7 +45,7 @@ function EventItem({ event, onPurchase, isPurchasing }) {
           <span className="label">Tickets Available: </span> 
           <span 
             className={`ticket-count ${isSoldOut ? 'sold-out' : ''}`}
-            aria-label={`${tickets_available} tickets remaining for ${name}`}
+            aria-label={`${tickets_available} ${ticketText} remaining for ${name}`}
           >
             {tickets_available}
           </span>
@@ -56,22 +57,22 @@ function EventItem({ event, onPurchase, isPurchasing }) {
           onClick={handlePurchase}
           disabled={isSoldOut || isPurchasing}
           className={`buy-ticket-btn ${isSoldOut ? 'sold-out' : ''}`}
-          aria-label={`Buy ticket for ${name} - ${tickets_available} tickets available`}
+          aria-label={`Buy ticket for ${name} - ${tickets_available} ${ticketText} available`}
           aria-describedby={`event-${id}-status`}
         >
           {isPurchasing ? (
             <>
-              <span aria-hidden="true">⏳</span>
+              <span aria-hidden="true">...</span>
               <span>Processing...</span>
             </>
           ) : isSoldOut ? (
             <>
-              <span aria-hidden="true">❌</span>
+              <span aria-hidden="true">X</span>
               <span>Sold Out</span>
             </>
           ) : (
             <>
-              <span aria-hidden="true">🎫</span>
+              <span aria-hidden="true">+</span>
               <span>Buy Ticket</span>
             </>
           )}
@@ -84,7 +85,7 @@ function EventItem({ event, onPurchase, isPurchasing }) {
         >
           {isSoldOut 
             ? `${name} is sold out` 
-            : `${tickets_available} tickets available for ${name}`
+            : `${tickets_available} ${ticketText} available for ${name}`
           }
         </div>
       </div>

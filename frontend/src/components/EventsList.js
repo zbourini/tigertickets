@@ -18,20 +18,23 @@ import EventItem from './EventItem';
  * @returns {JSX.Element} Events list section
  */
 function EventsList({ events, onPurchase, purchasingEventId }) {
+  // Handle null or undefined events
+  const safeEvents = events || [];
+  
   return (
     <>
       {/* Events count */}
       <div className="events-count" aria-live="polite">
-        {events.length === 0 
+        {safeEvents.length === 0 
           ? 'No events available' 
-          : `${events.length} event${events.length === 1 ? '' : 's'} available`
+          : `${safeEvents.length} event${safeEvents.length === 1 ? '' : 's'} available`
         }
       </div>
       
       {/* Events list */}
-      {events.length > 0 && (
+      {safeEvents.length > 0 && (
         <ul className="events-list" role="list">
-          {events.map((event) => (
+          {safeEvents.map((event) => (
             <EventItem
               key={event.id}
               event={event}

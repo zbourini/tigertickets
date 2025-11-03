@@ -61,7 +61,7 @@ describe('EventsList Component', () => {
             />
         );
         
-        expect(screen.getByText(/Purchasing.../i)).toBeInTheDocument();
+        expect(screen.getByText(/Processing.../i)).toBeInTheDocument();
     });
 
     test('renders events in chronological order', () => {
@@ -76,7 +76,7 @@ describe('EventsList Component', () => {
     test('renders correct number of events', () => {
         render(<EventsList events={mockEvents} onPurchase={mockOnPurchase} />);
         
-        const events = screen.getAllByText(/tickets available|Sold Out/i);
+        const events = screen.getAllByRole('listitem');
         expect(events).toHaveLength(3);
     });
 

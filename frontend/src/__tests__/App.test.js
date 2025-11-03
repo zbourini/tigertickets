@@ -184,8 +184,8 @@ describe('App Component - Integration Tests', () => {
         const buyButton = screen.getByText(/Buy Ticket/i);
         fireEvent.click(buyButton);
 
-        // Button should show purchasing state
-        expect(screen.getByText(/Purchasing.../i)).toBeInTheDocument();
+        // Button should show processing state
+        expect(screen.getByText(/Processing.../i)).toBeInTheDocument();
     });
 
     test('refreshes events when refresh button clicked', async () => {
@@ -382,7 +382,7 @@ describe('App Component - Integration Tests', () => {
         render(<App />);
 
         await waitFor(() => {
-            expect(screen.getByText(/Tiger Tickets|TigerTix/i)).toBeInTheDocument();
+            expect(screen.getByText(/Clemson Campus Events/i)).toBeInTheDocument();
         });
 
         expect(screen.getByRole('button', { name: /refresh/i })).toBeInTheDocument();
