@@ -6,3 +6,6 @@ node_modules/
 
 # SQLite database file
 database.sqlite
+
+# Coverage
+coverage/

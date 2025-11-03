@@ -4,9 +4,11 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:unit": "jest __tests__/unit",
+    "test:integration": "jest __tests__/integration"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -16,6 +18,28 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "controllers/**/*.js",
+      "models/**/*.js",
+      "routes/**/*.js",
+      "!**/*.test.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 40,
+        "functions": 10,
+        "lines": 30,
+        "statements": 30
+      }
+    },
+    "testMatch": [
+      "**/__tests__/**/*.test.js"
+    ]
   }
 }

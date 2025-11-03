@@ -58,7 +58,7 @@ async function getAllEvents(req, res) {
 async function purchaseTickets(req, res) {
     try {
         const eventId = parseInt(req.params.id);
-        const ticketCount = parseInt(req.body.ticketCount) || 1;
+        const ticketCount = req.body.ticketCount !== undefined ? parseInt(req.body.ticketCount) : 1;
         
         // Input validation
         if (isNaN(eventId) || eventId <= 0) {
