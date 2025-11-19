@@ -1,0 +1,119 @@
+/**
+ * Header Styles
+ * 
+ * CSS styles for the header component with authentication info
+ */
+
+.app-header {
+    background: linear-gradient(135deg, #522d80 0%, #f56600 100%);
+    color: white;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-text h1 {
+    margin: 0 0 5px 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.header-text p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.95;
+}
+
+.header-auth {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.user-label {
+    font-size: 11px;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-email {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.logout-button {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: white;
+    color: #522d80;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .header-auth {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .user-info {
+        align-items: flex-start;
+    }
+    
+    .header-text h1 {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-header {
+        padding: 15px;
+    }
+    
+    .header-text h1 {
+        font-size: 20px;
+    }
+    
+    .header-text p {
+        font-size: 13px;
+    }
+    
+    .user-email {
+        font-size: 13px;
+    }
+    
+    .logout-button {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+}

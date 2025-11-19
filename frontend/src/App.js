@@ -8,16 +8,23 @@ import {
   RefreshButton,
   ChatSidebar
 } from './components';
+import Login from './components/Login';
+import Register from './components/Register';
+import { AuthProvider, useAuth } from './context/AuthContext';
 
 /**
- * Main App component for the Tiger Tickets application
- * Manages state and coordinates between components for event display and ticket purchasing
+ * Main App Content Component
+ * Separated to use the useAuth hook inside AuthProvider
  */
-function App() {
+function AppContent() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
-  const [purchasing, setPurchasing] = useState(null); // Track which event is being purchased
+  const [purchasing, setPurchasing] = useState(null);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
+  
+  const { isAuthenticated, loading: authLoading, login, user } = useAuth();
 
   /**
    * Fetch events from the client service API
@@ -45,17 +52,29 @@ function App() {
   };
 
   useEffect(() => {
-    fetchEvents();
-  }, []);
+    // Only fetch events if authenticated or show auth forms
+    if (isAuthenticated) {
+      fetchEvents();
+    } else {
+      setLoading(false);
+    }
+  }, [isAuthenticated]);
 
   /**
    * Purchase a ticket for a specific event
    * Sends POST request to the client service and updates the UI
+   * Protected: Requires authentication
    * 
    * @param {number} eventId - ID of the event to purchase ticket for
    * @param {string} eventName - Name of the event for display purposes
    */
   const buyTicket = async (eventId, eventName) => {
+    if (!isAuthenticated) {
+      setMessage('Please login to purchase tickets');
+      setShowLogin(true);
+      return;
+    }
+
     try {
       setPurchasing(eventId);
       setMessage('');
@@ -108,6 +127,69 @@ function App() {
     );
   };
 
+  /**
+   * Handle successful login
+   */
+  const handleLoginSuccess = (userData, token) => {
+    login(userData, token);
+    setShowLogin(false);
+    setMessage(`Welcome back, ${userData.email}!`);
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  /**
+   * Handle successful registration
+   */
+  const handleRegisterSuccess = (userData, token) => {
+    login(userData, token);
+    setShowRegister(false);
+    setMessage(`Welcome, ${userData.email}! Account created successfully.`);
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="App">
+        <Header />
+        <main>
+          <LoadingSpinner />
+        </main>
+      </div>
+    );
+  }
+
+  // Show login/register forms if not authenticated
+  if (!isAuthenticated) {
+    if (showRegister) {
+      return (
+        <div className="App">
+          <Header />
+          <Register 
+            onRegisterSuccess={handleRegisterSuccess}
+            onSwitchToLogin={() => {
+              setShowRegister(false);
+              setShowLogin(true);
+            }}
+          />
+        </div>
+      );
+    }
+    
+    return (
+      <div className="App">
+        <Header />
+        <Login 
+          onLoginSuccess={handleLoginSuccess}
+          onSwitchToRegister={() => {
+            setShowLogin(false);
+            setShowRegister(true);
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="App">
       <Header />
@@ -134,6 +216,17 @@ function App() {
       {/* Chat Sidebar for AI-powered ticket booking */}
       <ChatSidebar onPurchase={handleChatPurchase} />
     </div>
+  );
+}
+
+/**
+ * Main App component wrapped with AuthProvider
+ */
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }
 

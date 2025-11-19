@@ -12,3 +12,5 @@ export { default as EventItem } from './EventItem';
 export { default as EventsList } from './EventsList';
 export { default as RefreshButton } from './RefreshButton';
 export { default as ChatSidebar } from './ChatSidebar';
+export { default as Login } from './Login';
+export { default as Register } from './Register';

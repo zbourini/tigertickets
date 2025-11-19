@@ -15,6 +15,18 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE INDEX IF NOT EXISTS idx_events_date ON events(date);
 CREATE INDEX IF NOT EXISTS idx_events_name ON events(name);
 
+-- Users table for authentication
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create index for email lookups
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
 -- Insert sample data for testing
 INSERT OR IGNORE INTO events (id, name, date, tickets_available) VALUES 
 (1, 'Clemson vs South Carolina Football', '2025-11-29', 80000),
