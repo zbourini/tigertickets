@@ -123,7 +123,12 @@ export function AuthProvider({ children }) {
 
         try {
             // Decode JWT (basic decode without verification)
-            const base64Url = token.split('.')[1];
+            const parts = token.split('.');
+            if (parts.length !== 3) {
+                console.warn('Invalid token format');
+                return;
+            }
+            const base64Url = parts[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             const payload = JSON.parse(window.atob(base64));
             

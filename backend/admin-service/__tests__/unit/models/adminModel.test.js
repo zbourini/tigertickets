@@ -1,12 +1,36 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs');
 
-const originalPath = path.join(__dirname, '..', '..', '..', 'models', 'adminModel.js');
+// Mock paths to point to a test database
+const mockTestDbPath = path.join(__dirname, '..', '..', '..', 'test-database.sqlite');
+
+// Mock the DB_PATH in the adminModel module
+jest.mock('path', () => {
+    const actualPath = jest.requireActual('path');
+    return {
+        ...actualPath,
+        join: (...args) => {
+            // Intercept the database path construction in adminModel
+            if (args.includes('shared-db') && args.includes('database.sqlite')) {
+                return mockTestDbPath;
+            }
+            return actualPath.join(...args);
+        }
+    };
+});
+
+const adminModel = require('../../../models/adminModel');
 
 let testDb;
 
 beforeAll(() => {
-    testDb = new sqlite3.Database(':memory:');
+    // Remove existing test database if it exists
+    if (fs.existsSync(mockTestDbPath)) {
+        fs.unlinkSync(mockTestDbPath);
+    }
+    
+    testDb = new sqlite3.Database(mockTestDbPath);
     
     return new Promise((resolve, reject) => {
         testDb.run(`
@@ -25,11 +49,29 @@ beforeAll(() => {
     });
 });
 
-afterAll(() => {
+afterAll(async () => {
+    // Give time for any pending operations to complete
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     return new Promise((resolve) => {
-        testDb.close(resolve);
+        testDb.close((err) => {
+            if (err) {
+                console.error('Error closing database:', err);
+            }
+            // Give file system time to release the lock
+            setTimeout(() => {
+                try {
+                    if (fs.existsSync(mockTestDbPath)) {
+                        fs.unlinkSync(mockTestDbPath);
+                    }
+                } catch (error) {
+                    console.error('Error cleaning up test database:', error);
+                }
+                resolve();
+            }, 200);
+        });
     });
-});
+}, 10000);
 
 function clearEvents() {
     return new Promise((resolve, reject) => {
@@ -39,111 +81,6 @@ function clearEvents() {
         });
     });
 }
-
-// Mock implementation of model functions using testDb
-const adminModel = {
-    getEvents: () => {
-        return new Promise((resolve, reject) => {
-            testDb.all(
-                'SELECT id, name, date, tickets_available, created_at, updated_at FROM events ORDER BY date ASC',
-                [],
-                (err, rows) => {
-                    if (err) reject(err);
-                    else resolve(rows);
-                }
-            );
-        });
-    },
-    
-    createEvent: (eventData) => {
-        return new Promise((resolve, reject) => {
-            const { name, date, tickets_available } = eventData;
-            testDb.run(
-                `INSERT INTO events (name, date, tickets_available, created_at, updated_at)
-                 VALUES (?, ?, ?, datetime('now'), datetime('now'))`,
-                [name, date, tickets_available],
-                function(err) {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    testDb.get(
-                        'SELECT id, name, date, tickets_available, created_at, updated_at FROM events WHERE id = ?',
-                        [this.lastID],
-                        (err, row) => {
-                            if (err) reject(err);
-                            else resolve(row);
-                        }
-                    );
-                }
-            );
-        });
-    },
-    
-    getEventById: (eventId) => {
-        return new Promise((resolve, reject) => {
-            testDb.get(
-                'SELECT id, name, date, tickets_available, created_at, updated_at FROM events WHERE id = ?',
-                [eventId],
-                (err, row) => {
-                    if (err) reject(err);
-                    else resolve(row || null);
-                }
-            );
-        });
-    },
-    
-    updateEvent: (eventId, updateData) => {
-        return new Promise((resolve, reject) => {
-            const fields = [];
-            const values = [];
-            
-            if (updateData.name !== undefined) {
-                fields.push('name = ?');
-                values.push(updateData.name);
-            }
-            if (updateData.date !== undefined) {
-                fields.push('date = ?');
-                values.push(updateData.date);
-            }
-            if (updateData.tickets_available !== undefined) {
-                fields.push('tickets_available = ?');
-                values.push(updateData.tickets_available);
-            }
-            
-            if (fields.length === 0) {
-                resolve(null);
-                return;
-            }
-            
-            fields.push('updated_at = datetime(\'now\')');
-            values.push(eventId);
-            
-            const updateQuery = `UPDATE events SET ${fields.join(', ')} WHERE id = ?`;
-            
-            testDb.run(updateQuery, values, function(err) {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                
-                if (this.changes === 0) {
-                    resolve(null);
-                    return;
-                }
-                
-                testDb.get(
-                    'SELECT id, name, date, tickets_available, created_at, updated_at FROM events WHERE id = ?',
-                    [eventId],
-                    (err, row) => {
-                        if (err) reject(err);
-                        else resolve(row);
-                    }
-                );
-            });
-        });
-    }
-};
 
 describe('Admin Model - getEvents', () => {
     beforeEach(async () => {
@@ -421,5 +358,113 @@ describe('Admin Model - updateEvent', () => {
         expect(updated.name).toBe('Event');
         expect(updated.date).toBe('2025-12-01');
         expect(updated.tickets_available).toBe(150);
+    });
+
+    test('should return null when updating with no fields', async () => {
+        const event = await adminModel.createEvent({
+            name: 'Event',
+            date: '2025-12-01',
+            tickets_available: 100
+        });
+
+        const updated = await adminModel.updateEvent(event.id, {});
+
+        expect(updated).toBeNull();
+    });
+});
+
+describe('Admin Model - Additional Edge Cases', () => {
+    beforeEach(async () => {
+        await clearEvents();
+    });
+
+    test('should handle events with special characters in name', async () => {
+        const event = await adminModel.createEvent({
+            name: "Bob's Concert & Show!",
+            date: '2025-12-01',
+            tickets_available: 100
+        });
+
+        expect(event.name).toBe("Bob's Concert & Show!");
+        
+        const retrieved = await adminModel.getEventById(event.id);
+        expect(retrieved.name).toBe("Bob's Concert & Show!");
+    });
+
+    test('should handle zero tickets available', async () => {
+        const event = await adminModel.createEvent({
+            name: 'Sold Out Event',
+            date: '2025-12-01',
+            tickets_available: 0
+        });
+
+        expect(event.tickets_available).toBe(0);
+    });
+
+    test('should handle large ticket counts', async () => {
+        const event = await adminModel.createEvent({
+            name: 'Huge Venue',
+            date: '2025-12-01',
+            tickets_available: 100000
+        });
+
+        expect(event.tickets_available).toBe(100000);
+    });
+
+    test('should update only tickets_available field', async () => {
+        const event = await adminModel.createEvent({
+            name: 'Event',
+            date: '2025-12-01',
+            tickets_available: 100
+        });
+
+        const updated = await adminModel.updateEvent(event.id, {
+            tickets_available: 0
+        });
+
+        expect(updated.tickets_available).toBe(0);
+        expect(updated.name).toBe('Event');
+        expect(updated.date).toBe('2025-12-01');
+    });
+
+    test('should handle updating tickets to zero', async () => {
+        const event = await adminModel.createEvent({
+            name: 'Event',
+            date: '2025-12-01',
+            tickets_available: 100
+        });
+
+        const updated = await adminModel.updateEvent(event.id, {
+            tickets_available: 0
+        });
+
+        expect(updated.tickets_available).toBe(0);
+    });
+
+    test('should retrieve multiple events in correct order', async () => {
+        const event1 = await adminModel.createEvent({
+            name: 'Event Z',
+            date: '2025-12-25',
+            tickets_available: 100
+        });
+
+        const event2 = await adminModel.createEvent({
+            name: 'Event A',
+            date: '2025-12-01',
+            tickets_available: 100
+        });
+
+        const event3 = await adminModel.createEvent({
+            name: 'Event M',
+            date: '2025-12-15',
+            tickets_available: 100
+        });
+
+        const events = await adminModel.getEvents();
+
+        expect(events).toHaveLength(3);
+        expect(events[0].name).toBe('Event A'); // Earliest date
+        expect(events[1].name).toBe('Event M'); // Middle date
+        expect(events[2].name).toBe('Event Z'); // Latest date
     });
 });

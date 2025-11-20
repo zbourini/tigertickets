@@ -281,6 +281,116 @@ describe('Admin Controller - addEvent', () => {
         );
     });
 
+    test('should reject event with name exceeding 255 characters', async () => {
+        req = {
+            body: {
+                name: 'A'.repeat(256),
+                date: '2025-12-20',
+                tickets_available: 200
+            }
+        };
+
+        await addEvent(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                success: false,
+                details: expect.arrayContaining([
+                    expect.stringContaining('cannot exceed 255 characters')
+                ])
+            })
+        );
+    });
+
+    test('should reject event with non-string name', async () => {
+        req = {
+            body: {
+                name: 12345,
+                date: '2025-12-20',
+                tickets_available: 200
+            }
+        };
+
+        await addEvent(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                success: false,
+                details: expect.arrayContaining([
+                    expect.stringContaining('must be a string')
+                ])
+            })
+        );
+    });
+
+    test('should reject event with non-integer ticket count', async () => {
+        req = {
+            body: {
+                name: 'Concert',
+                date: '2025-12-20',
+                tickets_available: 'not-a-number'
+            }
+        };
+
+        await addEvent(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                success: false,
+                details: expect.arrayContaining([
+                    expect.stringContaining('must be a valid integer')
+                ])
+            })
+        );
+    });
+
+    test('should reject event with ticket count exceeding 1,000,000', async () => {
+        req = {
+            body: {
+                name: 'Concert',
+                date: '2025-12-20',
+                tickets_available: 1000001
+            }
+        };
+
+        await addEvent(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                success: false,
+                details: expect.arrayContaining([
+                    expect.stringContaining('cannot exceed 1,000,000')
+                ])
+            })
+        );
+    });
+
+    test('should reject event with non-string date', async () => {
+        req = {
+            body: {
+                name: 'Concert',
+                date: 12345,
+                tickets_available: 200
+            }
+        };
+
+        await addEvent(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith(
+            expect.objectContaining({
+                success: false,
+                details: expect.arrayContaining([
+                    expect.stringContaining('YYYY-MM-DD format')
+                ])
+            })
+        );
+    });
+
     test('should handle database errors during creation', async () => {
         req = {
             body: {
@@ -409,6 +519,49 @@ describe('Admin Controller - updateEventById', () => {
             json: jest.fn()
         };
         jest.clearAllMocks();
+    });
+
+    test('should reject invalid event ID in update', async () => {
+        req = {
+            params: { id: 'invalid' },
+            body: { name: 'Updated Name' }
+        };
+
+        await updateEventById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            error: 'Invalid event ID',
+            message: 'Event ID must be a positive integer'
+        });
+    });
+
+    test('should reject negative event ID in update', async () => {
+        req = {
+            params: { id: '-1' },
+            body: { name: 'Updated Name' }
+        };
+
+        await updateEventById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            error: 'Invalid event ID',
+            message: 'Event ID must be a positive integer'
+        });
+    });
+
+    test('should reject zero as event ID in update', async () => {
+        req = {
+            params: { id: '0' },
+            body: { name: 'Updated Name' }
+        };
+
+        await updateEventById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
     });
 
     test('should update event with all fields', async () => {
@@ -561,6 +714,54 @@ describe('Admin Controller - updateEventById', () => {
             success: false,
             error: 'Invalid ticket count',
             message: 'Tickets available must be a non-negative integer'
+        });
+    });
+
+    test('should reject non-integer ticket count in update', async () => {
+        req = {
+            params: { id: '1' },
+            body: { tickets_available: 'not-a-number' }
+        };
+
+        await updateEventById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            error: 'Invalid ticket count',
+            message: 'Tickets available must be a non-negative integer'
+        });
+    });
+
+    test('should reject non-string date in update', async () => {
+        req = {
+            params: { id: '1' },
+            body: { date: 12345 }
+        };
+
+        await updateEventById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            error: 'Invalid date format',
+            message: 'Date must be in YYYY-MM-DD format'
+        });
+    });
+
+    test('should reject non-string name in update', async () => {
+        req = {
+            params: { id: '1' },
+            body: { name: 12345 }
+        };
+
+        await updateEventById(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.json).toHaveBeenCalledWith({
+            success: false,
+            error: 'Invalid event name',
+            message: 'Event name must be a non-empty string'
         });
     });
 
