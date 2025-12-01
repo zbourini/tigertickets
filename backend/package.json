@@ -1,0 +1,20 @@
+{
+  "name": "tigertickets-backend",
+  "version": "1.0.0",
+  "description": "TigerTickets backend microservices",
+  "scripts": {
+    "start": "concurrently \"npm run start:admin\" \"npm run start:client\" \"npm run start:llm\" \"npm run start:auth\"",
+    "start:admin": "cd admin-service && npm start",
+    "start:client": "cd client-service && npm start",
+    "start:llm": "cd llm-driven-booking && npm start",
+    "start:auth": "cd user-authentication && npm start",
+    "test": "npm run test:admin && npm run test:client && npm run test:llm",
+    "test:admin": "cd admin-service && npm test",
+    "test:client": "cd client-service && npm test",
+    "test:llm": "cd llm-driven-booking && npm test",
+    "install:all": "npm install && cd admin-service && npm install && cd ../client-service && npm install && cd ../llm-driven-booking && npm install && cd ../user-authentication && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
