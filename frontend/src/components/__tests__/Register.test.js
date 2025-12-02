@@ -10,6 +10,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Register from '../Register';
 import { setupFetchMock } from '../../testUtils';
+const dotenv = require('dotenv');
+
+// Init environment variables
+dotenv.config();
 
 describe('Register Component', () => {
   let fetchMock;
@@ -270,7 +274,7 @@ describe('Register Component', () => {
       
       await waitFor(() => {
         expect(fetch).toHaveBeenCalledWith(
-          'http://localhost:8001/api/auth/register',
+          `${process.env.BASE_URL}/api/auth/register`,
           expect.objectContaining({
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

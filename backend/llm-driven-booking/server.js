@@ -27,7 +27,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API Routes
-app.use('/api', llmRoutes);
+app.use(llmRoutes);
+
+// Root endpoint
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Tiger Tickets LLM Service',
+        endpoints: endpoints
+    });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -46,10 +55,12 @@ app.use((req, res) => {
     });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`LLM service running on port ${PORT}`);
-    console.log(`LLM API: http://localhost:${PORT}/api/llm/parse`);
-});
+if (require.main === module) {
+    // Start server
+    app.listen(PORT, () => {
+        console.log(`LLM service running on port ${PORT}`);
+        console.log(`LLM API: http://localhost:${PORT}/api/llm/parse`);
+    });
+}
 
 module.exports = app;

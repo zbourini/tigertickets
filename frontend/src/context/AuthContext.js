@@ -6,6 +6,10 @@
  */
 
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+const dotenv = require('dotenv');
+
+// Init environment variables
+dotenv.config();
 
 const AuthContext = createContext(null);
 
@@ -45,7 +49,7 @@ export function AuthProvider({ children }) {
      */
     const verifyToken = useCallback(async (tokenToVerify) => {
         try {
-            const response = await fetch('http://localhost:8001/api/auth/verify', {
+            const response = await fetch(`${process.env.BASE_URL}/api/auth/verify`, {
                 headers: {
                     'Authorization': `Bearer ${tokenToVerify || token}`
                 },
@@ -88,7 +92,7 @@ export function AuthProvider({ children }) {
     const logout = useCallback(async () => {
         try {
             // Call logout endpoint to clear HTTP-only cookie
-            await fetch('http://localhost:8001/api/auth/logout', {
+            await fetch(`${process.env.BASE_URL}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });

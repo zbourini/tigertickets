@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 });
 
 // API routes
-app.use('/api/auth', authRoutes);
+app.use(authRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -110,7 +110,8 @@ async function startServer() {
     }
 }
 
-// Start the server
-startServer();
-
+if (require.main === module) {
+    // Start the server
+    startServer();
+}
 module.exports = app;

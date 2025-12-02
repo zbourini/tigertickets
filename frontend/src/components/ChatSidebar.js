@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './ChatSidebar.css';
+const dotenv = require('dotenv');
+
+// Init environment variables
+dotenv.config();
 
 /**
  * ChatSidebar component for interacting with the LLM service
@@ -166,7 +170,7 @@ function ChatSidebar({ onPurchase }) {
 
     try {
       // Call LLM service
-      const response = await fetch('http://localhost:7001/api/llm/parse', {
+      const response = await fetch(`${process.env.BASE_URL}/api/llm/parse`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -237,7 +241,7 @@ function ChatSidebar({ onPurchase }) {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`http://localhost:6001/api/events/${eventId}/purchase`, {
+      const response = await fetch(`${process.env.BASE_URL}/api/client/events/${eventId}/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

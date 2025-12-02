@@ -8,6 +8,10 @@
 
 import React, { useState } from 'react';
 import './Auth.css';
+const dotenv = require('dotenv');
+
+// Init environment variables
+dotenv.config();
 
 function Login({ onLoginSuccess, onSwitchToRegister }) {
     const [formData, setFormData] = useState({
@@ -39,7 +43,7 @@ function Login({ onLoginSuccess, onSwitchToRegister }) {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8001/api/auth/login', {
+            const response = await fetch(`${process.env.BASE_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

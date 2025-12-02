@@ -11,6 +11,10 @@ import {
 import Login from './components/Login';
 import Register from './components/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
+const dotenv = require('dotenv');
+
+// Init environment variables
+dotenv.config();
 
 /**
  * Main App Content Component
@@ -33,7 +37,7 @@ function AppContent() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:6001/api/events');
+      const response = await fetch(`${process.env.BASE_URL}/api/client/events`);
       const data = await response.json();
       
       if (data.success) {
@@ -79,7 +83,7 @@ function AppContent() {
       setPurchasing(eventId);
       setMessage('');
       
-      const response = await fetch(`http://localhost:6001/api/events/${eventId}/purchase`, {
+      const response = await fetch(`${process.env.BASE_URL}/api/client/events/${eventId}/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

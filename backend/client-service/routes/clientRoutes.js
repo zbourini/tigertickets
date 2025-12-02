@@ -17,14 +17,14 @@ const router = express.Router();
 const clientController = require('../controllers/clientController');
 
 /**
- * @route   GET /api/events
+ * @route   GET /api/client/events
  * @desc    Get all events for client display
  * @access  Public
  */
 router.get('/events', clientController.getAllEvents);
 
 /**
- * @route   GET /api/events/:id
+ * @route   GET /api/client/events/:id
  * @desc    Get specific event by ID
  * @access  Public
  * @param   {string} id - Event ID
@@ -32,7 +32,7 @@ router.get('/events', clientController.getAllEvents);
 router.get('/events/:id', clientController.getEventById);
 
 /**
- * @route   POST /api/events/:id/purchase
+ * @route   POST /api/client/events/:id/purchase
  * @desc    Purchase tickets for a specific event
  * @access  Public
  * @param   {string} id - Event ID

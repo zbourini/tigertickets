@@ -43,7 +43,7 @@ endpoints = [
     'PUT /api/admin/events/:id'
 ]
 
-app.use('/api/admin', adminRoutes);
+app.use(adminRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -115,4 +115,8 @@ process.on('SIGTERM', () => {
 });
 
 // Start the server
-startServer();
+if (require.main === module) {
+    startServer();
+}
+
+module.exports = app;

@@ -20,6 +20,6 @@ const llmController = require('../controllers/llmController');
  * @access  Public
  * @param   {string} message - User input message to parse
  */
-router.post('/llm/parse', llmController.parseUserInput);
+router.post('/parse', llmController.parseUserInput);
 
 module.exports = router;

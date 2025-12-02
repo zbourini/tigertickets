@@ -3,18 +3,23 @@
   "version": "1.0.0",
   "description": "TigerTickets backend microservices",
   "scripts": {
-    "start": "concurrently \"npm run start:admin\" \"npm run start:client\" \"npm run start:llm\" \"npm run start:auth\"",
+    "start": "concurrently \"npm run start:admin\" \"npm run start:client\" \"npm run start:llm\" \"npm run start:auth\" \"npm run start:backend\"",
     "start:admin": "cd admin-service && npm start",
     "start:client": "cd client-service && npm start",
     "start:llm": "cd llm-driven-booking && npm start",
     "start:auth": "cd user-authentication && npm start",
+    "start:backend": "node server.js",
     "test": "npm run test:admin && npm run test:client && npm run test:llm",
     "test:admin": "cd admin-service && npm test",
     "test:client": "cd client-service && npm test",
     "test:llm": "cd llm-driven-booking && npm test",
     "install:all": "npm install && cd admin-service && npm install && cd ../client-service && npm install && cd ../llm-driven-booking && npm install && cd ../user-authentication && npm install"
   },
-  "devDependencies": {
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.2.1"
+  },
+    "devDependencies": {
     "concurrently": "^8.2.2"
   }
 }

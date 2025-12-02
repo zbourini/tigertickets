@@ -29,7 +29,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API Routes
-app.use('/api', clientRoutes);
+app.use(clientRoutes);
+
+// Root endpoint
+app.get('/', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Tiger Tickets Client Service',
+        endpoints: endpoints
+    });
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -48,10 +57,12 @@ app.use((req, res) => {
     });
 });
 
-// Start server
-app.listen(PORT, () => {
-    console.log(`Client service running on port ${PORT}`);
-    console.log(`Events API: http://localhost:${PORT}/api/events`);
-});
+if (require.main === module) {
+    // Start server
+    app.listen(PORT, () => {
+        console.log(`Client service running on port ${PORT}`);
+        console.log(`Events API: http://localhost:${PORT}/api/events`);
+    });
+}
 
 module.exports = app;
