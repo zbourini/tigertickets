@@ -10,7 +10,7 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 6001;
+const PORT = 6001;
 
 // Import routes
 const clientRoutes = require('./routes/clientRoutes');

@@ -12,7 +12,7 @@ const cookieParser = require('cookie-parser');
 const { initializeDatabase } = require('./setup');
 
 const app = express();
-const PORT = process.env.PORT || 8001;
+const PORT = 8001;
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
