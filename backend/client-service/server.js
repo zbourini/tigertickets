@@ -31,6 +31,13 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use(clientRoutes);
 
+endpoints = [
+    'GET /',
+    'GET /api/client/events',
+    'GET /api/client/events/:id',
+    'POST /api/client/events/:id/purchase'
+]
+
 // Root endpoint
 app.get('/', (req, res) => {
     res.status(200).json({

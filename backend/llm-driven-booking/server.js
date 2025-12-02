@@ -29,6 +29,11 @@ app.use(express.urlencoded({ extended: true }));
 // API Routes
 app.use(llmRoutes);
 
+endpoints = [
+    'GET /',
+    'POST /api/llm/parse'
+]
+
 // Root endpoint
 app.get('/', (req, res) => {
     res.status(200).json({
