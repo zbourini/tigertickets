@@ -95,10 +95,12 @@ describe('EventItem Component', () => {
         const event = { ...mockEvent, date: '2025-01-01' };
         render(<EventItem event={event} onPurchase={mockOnPurchase} />);
         
-        // Date should be in the datetime attribute
-        const timeElement = screen.getByText(/12\/31\/2024/i);
+        // Find the time element by its datetime attribute
+        const timeElement = screen.getByText(/Date:/i).closest('p').querySelector('time');
         expect(timeElement).toBeInTheDocument();
         expect(timeElement).toHaveAttribute('datetime', '2025-01-01');
+        // Verify it has date text (format may vary by timezone)
+        expect(timeElement.textContent).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
     });
 
     test('handles very long event names', () => {
