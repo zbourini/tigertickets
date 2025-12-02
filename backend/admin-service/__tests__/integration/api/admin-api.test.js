@@ -518,7 +518,7 @@ describe('Admin Service API - Response Format Consistency', () => {
             .post('/api/admin/events')
             .send({
                 name: 'Event',
-                date: '2025-12-01',
+                date: '2099-12-02',
                 tickets_available: 100
             });
 
