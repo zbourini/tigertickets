@@ -12,14 +12,14 @@ describe('LLM Routes - Integration Tests', () => {
     beforeAll(() => {
         app = express();
         app.use(express.json());
-        app.use('/api', llmRoutes);
+        app.use(llmRoutes);
     });
 
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    describe('POST /api/llm/parse', () => {
+    describe('POST /parse', () => {
         test('should call parseUserInput controller', async () => {
             llmController.parseUserInput.mockImplementation((req, res) => {
                 res.status(200).json({
@@ -32,7 +32,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Find basketball games' });
 
             expect(response.status).toBe(200);
@@ -49,7 +49,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Test message' });
 
             expect(llmController.parseUserInput).toHaveBeenCalled();
@@ -76,7 +76,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Find basketball games' });
 
             expect(response.status).toBe(200);
@@ -97,7 +97,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Find opera events' });
 
             expect(response.status).toBe(200);
@@ -114,7 +114,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Find events' });
 
             expect(response.status).toBe(500);
@@ -137,7 +137,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: '' });
 
             expect(response.status).toBe(200);
@@ -155,7 +155,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({});
 
             expect(response.status).toBe(200);
@@ -173,7 +173,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Find "Rock & Roll" concert!!!' });
 
             expect(response.status).toBe(200);
@@ -188,7 +188,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Test' });
 
             expect(response.headers['content-type']).toMatch(/json/);
@@ -212,7 +212,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Show me all concerts' });
 
             expect(response.status).toBe(200);
@@ -230,7 +230,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: longMessage });
 
             expect(response.status).toBe(200);
@@ -246,7 +246,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Find events' });
 
             expect(response.status).toBe(500);
@@ -263,7 +263,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Book tickets' });
 
             expect(response.status).toBe(500);
@@ -283,7 +283,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Hello' });
 
             expect(response.status).toBe(200);
@@ -304,7 +304,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'FIND BASKETBALL GAMES' });
 
             expect(response.status).toBe(200);
@@ -338,7 +338,7 @@ describe('LLM Routes - Integration Tests', () => {
             });
 
             const response = await request(app)
-                .post('/api/llm/parse')
+                .post('/parse')
                 .send({ message: 'Find basketball' });
 
             expect(response.status).toBe(200);
@@ -357,7 +357,7 @@ describe('LLM Routes - Integration Tests', () => {
 
         test('should return 404 for wrong HTTP method', async () => {
             const response = await request(app)
-                .get('/api/llm/parse');
+                .get('/parse');
 
             expect(response.status).toBe(404);
         });
