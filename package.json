@@ -1,0 +1,19 @@
+{
+  "name": "tigertickets",
+  "version": "1.0.0",
+    "scripts": {
+    "start:backend": "cd backend && npm start",
+    "test:backend": "cd backend && npm run test",
+    "start:frontend": "cd frontend && npm start",
+    "test:frontend": "cd frontend && npm test",
+    "install:all": "npm install && cd backend && npm install && npm install:all && cd ../frontend && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zbourini/tigertickets.git"
+  },
+  "bugs": {
+    "url": "https://github.com/zbourini/tigertickets/issues"
+  },
+  "homepage": "https://github.com/zbourini/tigertickets#readme"
+}
