@@ -8,10 +8,6 @@
 
 import React, { useState } from 'react';
 import './Auth.css';
-import dotenv from 'dotenv';
-
-// Init environment variables
-dotenv.config();
 
 function Register({ onRegisterSuccess, onSwitchToLogin }) {
     const [formData, setFormData] = useState({
