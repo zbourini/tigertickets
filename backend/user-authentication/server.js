@@ -19,7 +19,7 @@ const authRoutes = require('./routes/authRoutes');
 
 // Middleware configuration
 app.use(cors({
-    origin: ["https://tigertickets.vercel.app", "http://localhost:3000"], 
+    origin: ["http://localhost:3000", "http://localhost:6001", "http://localhost:5001"], 
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 }));

@@ -12,7 +12,7 @@ const userAuthService = require('./user-authentication/server');
 
 // Middleware configuration
 app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:6001", "http://localhost:5001"], 
+    origin: ["https://tigertickets.vercel.app", "http://localhost:3000"], 
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
