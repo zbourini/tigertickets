@@ -10,10 +10,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Login from '../Login';
 import { setupFetchMock } from '../../testUtils';
-const dotenv = require('dotenv');
-
-// Init environment variables
-dotenv.config();
 
 describe('Login Component', () => {
   let fetchMock;

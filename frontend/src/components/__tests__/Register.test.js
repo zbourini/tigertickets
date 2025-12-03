@@ -10,10 +10,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Register from '../Register';
 import { setupFetchMock } from '../../testUtils';
-const dotenv = require('dotenv');
-
-// Init environment variables
-dotenv.config();
 
 describe('Register Component', () => {
   let fetchMock;
