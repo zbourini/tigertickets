@@ -6,10 +6,6 @@
  */
 
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import dotenv from 'dotenv';
-
-// Init environment variables
-dotenv.config();
 
 const AuthContext = createContext(null);
 

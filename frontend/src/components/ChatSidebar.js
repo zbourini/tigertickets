@@ -1,9 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './ChatSidebar.css';
-import dotenv from 'dotenv';
-
-// Init environment variables
-dotenv.config();
 
 /**
  * ChatSidebar component for interacting with the LLM service
