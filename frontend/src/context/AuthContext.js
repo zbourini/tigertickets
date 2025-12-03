@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
      */
     const verifyToken = useCallback(async (tokenToVerify) => {
         try {
-            const response = await fetch(`${process.env.BASE_URL}/api/auth/verify`, {
+            const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/verify`, {
                 headers: {
                     'Authorization': `Bearer ${tokenToVerify || token}`
                 },
@@ -92,7 +92,7 @@ export function AuthProvider({ children }) {
     const logout = useCallback(async () => {
         try {
             // Call logout endpoint to clear HTTP-only cookie
-            await fetch(`${process.env.BASE_URL}/api/auth/logout`, {
+            await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });

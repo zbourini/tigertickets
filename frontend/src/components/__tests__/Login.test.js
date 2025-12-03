@@ -153,7 +153,7 @@ describe('Login Component', () => {
       
       await waitFor(() => {
         expect(fetch).toHaveBeenCalledWith(
-          `${process.env.BASE_URL}/api/auth/login`,
+          `${process.env.REACT_APP_BASE_URL}/api/auth/login`,
           expect.objectContaining({
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

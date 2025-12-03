@@ -170,7 +170,7 @@ function ChatSidebar({ onPurchase }) {
 
     try {
       // Call LLM service
-      const response = await fetch(`${process.env.BASE_URL}/api/llm/parse`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/llm/parse`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -241,7 +241,7 @@ function ChatSidebar({ onPurchase }) {
     setIsLoading(true);
     
     try {
-      const response = await fetch(`${process.env.BASE_URL}/api/client/events/${eventId}/purchase`, {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/client/events/${eventId}/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -33,3 +33,5 @@ jobs:
       run: |
         cd frontend
         npm run test
+      env:
+        REACT_APP_BASE_URL: http://localhost:10000

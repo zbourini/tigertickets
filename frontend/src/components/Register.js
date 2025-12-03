@@ -77,7 +77,7 @@ function Register({ onRegisterSuccess, onSwitchToLogin }) {
         setLoading(true);
 
         try {
-            const response = await fetch(`${process.env.BASE_URL}/api/auth/register`, {
+            const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
