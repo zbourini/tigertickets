@@ -8,7 +8,7 @@
 
 import React, { useState } from 'react';
 import './Auth.css';
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 // Init environment variables
 dotenv.config();

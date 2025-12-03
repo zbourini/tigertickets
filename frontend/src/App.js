@@ -11,7 +11,7 @@ import {
 import Login from './components/Login';
 import Register from './components/Register';
 import { AuthProvider, useAuth } from './context/AuthContext';
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 // Init environment variables
 dotenv.config();

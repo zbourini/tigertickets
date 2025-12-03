@@ -6,7 +6,7 @@
  */
 
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-const dotenv = require('dotenv');
+import dotenv from 'dotenv';
 
 // Init environment variables
 dotenv.config();
