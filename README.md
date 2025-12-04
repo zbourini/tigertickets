@@ -39,14 +39,20 @@ TigerTickets is an innovative event ticketing system that allows users to search
 - **Node.js** - Runtime environment
 - **Express.js** (v5.x) - Web framework
 - **SQLite3** - Database
-- **Groq AI SDK** - LLM integration
+- **Groq AI SDK** - LLM integration (Llama models)
+- **bcrypt** - Password hashing
+- **jsonwebtoken** - JWT implementation library
+- **JSON Web Tokens (JWT)** - Authentication
 - **Vercel AI SDK** - AI streaming and tools
+- **cors** - Cross-origin resource sharing
 - **Jest & Supertest** - Testing
 - **Concurrently** - Multi-service orchestration
 
 ### DevOps & Tools
 - **Git & GitHub** - Version control
 - **GitHub Actions** - CI/CD
+- **Vercel** - Frontend deployment
+- **Render** - Backend deployment
 - **npm** - Package management
 - **dotenv** - Environment configuration
 
@@ -78,7 +84,15 @@ TigerTickets follows a **microservices architecture** with a unified backend gat
 - **Frontend**: Deployed on **Vercel** (https://tigertickets.vercel.app)
 - **Backend Gateway**: Deployed on **Render** (Port 10000)
 - **Database**: SQLite with persistent storage on Render
+  - **Note**: Render's free tier may reset the database on redeployment. Consider upgrading for persistent disk storage or migrating to PostgreSQL for production use.
 - **CI/CD**: GitHub Actions for automated testing on push/PR
+
+### Port Configuration
+
+| Service | Port | URL |
+|---------|------|-----|
+| Backend Gateway | 10000 | http://localhost:10000 |
+| Frontend | 3000 | http://localhost:3000 |
 
 ## Installation & Setup
 
@@ -134,6 +148,21 @@ GROQ_API_KEY=your_groq_api_key_here
 3. Navigate to API Keys section
 4. Generate a new API key
 5. Copy and paste into your `.env` file
+
+### Backend - Authentication Service
+
+Create environment variables for JWT (can be added to `.env` in `backend/user-authentication/`):
+
+```env
+# JWT Configuration
+JWT_SECRET=your_secure_random_string_here
+```
+
+**How to generate a secure JWT secret:**
+```bash
+# Using Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
 
 ### Frontend
 
