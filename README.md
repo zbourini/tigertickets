@@ -378,15 +378,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-**MIT License**
-- Allows commercial and private use
-- Permits modification and distribution
-- Is simple and permissive
-- Is widely recognized and accepted
-- Compatible with most other licenses
-- Provides liability protection
-- Is ideal for academic and open-source projects
-
 ## Links
 
 - **Live Application**: https://tigertickets.vercel.app
