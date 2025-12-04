@@ -370,8 +370,8 @@ Learn more about choosing the right license at [choosealicense.com](https://choo
 
 ## Contributing
 
-This is an academic project. For questions or suggestions, please open an issue on GitHub.
+This is an academic project.
 
 ---
 
-**Built by the TigerTickets Team at Clemson University**
+**Built by the Ahmet & Zaid at Clemson University**
