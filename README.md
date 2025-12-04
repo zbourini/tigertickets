@@ -378,9 +378,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
-**Why MIT License?**
-
-The MIT License was chosen for TigerTickets because it:
+**MIT License**
 - Allows commercial and private use
 - Permits modification and distribution
 - Is simple and permissive
@@ -388,8 +386,6 @@ The MIT License was chosen for TigerTickets because it:
 - Compatible with most other licenses
 - Provides liability protection
 - Is ideal for academic and open-source projects
-
-Learn more about choosing the right license at [choosealicense.com](https://choosealicense.com/licenses/)
 
 ## Links
 
@@ -403,4 +399,4 @@ This is an academic project.
 
 ---
 
-**Built by the Ahmet & Zaid at Clemson University**
+**Built by the Ahmet Dokmeci & Zaid Bourini at Clemson University**
