@@ -283,7 +283,7 @@ function ChatSidebar({ onPurchase }) {
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
-        {isOpen ? 'X' : 'Chat'}
+        {isOpen ? '✕' : '💬'}
       </button>
 
       {/* Chat Sidebar */}
@@ -309,7 +309,7 @@ function ChatSidebar({ onPurchase }) {
                     aria-label={speakingMessageId === msg.id ? 'Stop speaking' : 'Read aloud'}
                     title={speakingMessageId === msg.id ? 'Stop speaking' : 'Read aloud'}
                   >
-                    {speakingMessageId === msg.id ? 'Stop' : 'Read'}
+                    {speakingMessageId === msg.id ? '🔊' : '🔈'}
                   </button>
                 )}
               </div>
@@ -373,7 +373,7 @@ function ChatSidebar({ onPurchase }) {
                   : 'Voice input'
             }
           >
-            {isListening ? 'Listening...' : 'Mic'}
+            {isListening ? '🎤' : '🎙️'}
           </button>
           <input
             type="text"
@@ -390,7 +390,7 @@ function ChatSidebar({ onPurchase }) {
             disabled={!inputValue.trim() || isLoading}
             aria-label="Send message"
           >
-            Send
+            ➤
           </button>
         </div>
       </div>
