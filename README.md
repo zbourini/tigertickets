@@ -54,7 +54,7 @@ TigerTickets is an innovative event ticketing system that allows users to search
 
 TigerTickets follows a **microservices architecture** with a unified backend gateway that routes to four specialized services:
 
-INSERT IMAGE HERE
+![Architecture Diagram](diagram.png)
 
 ### Data Flow
 
