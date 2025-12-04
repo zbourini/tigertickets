@@ -9,8 +9,43 @@ A modern, AI-powered event ticketing platform built with microservices architect
 
 See TigerTickets in action! This video demonstrates the natural language booking system, event management features, and user authentication flow.
 
+## Quick Start - Run Locally
+
+Get TigerTickets running on your local machine in minutes:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/zbourini/tigertickets.git
+cd tigertickets
+
+# 2. Install all dependencies
+npm run install:all
+
+# 3. Set up environment variables
+# Create .env file for LLM service
+cd backend/llm-driven-booking
+echo "GROQ_API_KEY=your_groq_api_key_here" > .env
+
+# Create .env file for frontend
+cd ../../frontend
+echo "REACT_APP_BASE_URL=http://localhost:10000" > .env
+
+# 4. Start the backend (Terminal 1)
+cd ../backend
+npm start
+
+# 5. Start the frontend (Terminal 2 - open a new terminal)
+cd frontend
+npm start
+```
+
+**That's it!** Open http://localhost:3000 in your browser to use TigerTickets.
+
+**Note:** Get your free Groq API key at [console.groq.com](https://console.groq.com/) - required for the LLM booking feature.
+
 ## Table of Contents
 
+- [Quick Start - Run Locally](#quick-start---run-locally)
 - [Project Overview](#project-overview)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
